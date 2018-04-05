@@ -1,0 +1,69 @@
+<import name='article' src='../Article'></import>
+<import name='voice' src='../Voice'></import>
+<import name='books' src='../Books'></import>
+<template>
+<div class="home">
+    <tabs onchange="onChangeTabIndex">
+        <tab-bar class="tab-bar" mode="scrollable">
+            <div class="tab-bar-box" for="{{tabList}}">
+                <text class="{{currentIndex === $idx ? 'active' : ''}}">{{$item.title}}</text>
+            </div>
+        </tab-bar>
+        <tab-content class="tab-content">
+            <article></article>
+            <voice></voice>
+            <books></books>
+        </tab-content>
+    </tabs>
+</div>
+</template>
+
+<style>
+.tab-bar-box {
+    width: 160px;
+    justify-content: center;
+    align-items: center;
+}
+.tab-bar-box text {
+    width: 60px;
+    padding-bottom: 10px;
+    text-align: center;
+    color: #999999;
+}
+.tab-bar-box .active {
+    color: #333333;
+    border-width: 0 0 4px 0;
+    border-color: #30a29d;
+}
+.tab-content {
+    flex: 1;
+}
+</style>
+
+<script>
+export default {
+    private: {
+        tabList: [
+            {title: '文章'},
+            {title: '声音'},
+            {title: '书架'}
+        ],
+        currentIndex: 0
+    },
+    onInit() {
+        this.changeTabIndex(0)
+    },
+    changeTabIndex(index) {
+        const item = Object.assign({}, this.tabList[index])
+        item.render = true
+        this.tabList.splice(index, 1, item)
+    },
+    onChangeTabIndex (evt) {
+        this.currentIndex = evt.index
+        this.changeTabIndex(evt.index)
+    },
+    renderTabContent (index) {
+        return !!this.tabList[index].render
+    }
+}
+</script>

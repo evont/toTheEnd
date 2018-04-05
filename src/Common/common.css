@@ -1,0 +1,11 @@
+.loading {
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading text {
+    font-size: 32px;
+    text-align: center;
+}

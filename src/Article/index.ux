@@ -1,0 +1,101 @@
+<template>
+    <div class="article">
+        <div if="isLoading" class="loading">
+            <text>文章读取中...</text>
+        </div>
+        <div else class="article-content">
+            <text class="title">{{ title }}</text>
+            <text class="author">{{ author }}</text>
+            <text class="article">{{ content }}</text>
+            <input class="btn" type="button" value="随机一篇" onclick="randomArticle">
+        </div>
+    </div>
+</template>
+
+<style>
+     @import '../Common/common.css';
+    .article {
+        flex-direction: column;
+        flex: 1;
+    }
+    .article-content {
+        flex: 1;
+        flex-direction: column;
+        padding: 10px 40px;
+        align-items: center;
+    }
+    .article-content .title {
+        margin: 20px 0;
+        padding: 10px 0;
+        font-size: 40px;
+        color: #333333;
+        text-align: center;
+        border-width: 0 0 1px 0;
+        border-color: #cccccc;
+    }
+    .article-content .author {
+        margin: 10px 0 20px 0;
+        color: #999999;
+        text-align: center;
+    }
+    .article-content .article {
+        padding: 0 0 40px 0;
+        color: #333333;
+    }
+    .btn {
+        width: 400px;
+        height: 86px;
+        margin: 75px;
+        border-radius: 43px;
+        background-color: #fddb6f;
+        font-size: 30px;
+        color: #333333;
+    }
+</style>
+
+<script>
+    import fetch from '@system.fetch'
+    export default {
+        data: {
+            model: {},
+            title: '读取中',
+            content: '',
+            author: '佚名',
+            isLoading: true,
+        },
+        onInit () {
+            let _self = this;
+            this.isLoading = true;
+            fetch.fetch({
+                url: 'http://daren.vipc.me/api/article/daily',
+                success: function(res){
+                    let model = JSON.parse(res.data).model;
+                    _self.title = model.title;
+                    _self.content = model.content;
+                    _self.author = model.author;
+                    _self.isLoading = false;
+                },
+                fail: function(data, code) {
+                    console.log("handling fail, code=" + code);
+                }
+            })
+        },
+        randomArticle () {
+            let _self = this;
+            this.isLoading = true;
+            fetch.fetch({
+                url: 'http://daren.vipc.me/api/article/random',
+                success: function(res){
+                    let model = JSON.parse(res.data).model;
+                    _self.title = model.title;
+                    _self.content = model.content;
+                    _self.author = model.author;
+                    _self.isLoading = false;
+                },
+                fail: function(data, code) {
+                    console.log("handling fail, code=" + code);
+                }
+            })
+        }
+    }
+</script>

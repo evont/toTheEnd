@@ -1,0 +1,17 @@
+<template>
+    <div class="article">
+        <text>boook</text>
+    </div>
+</template>
+
+<style src="../Common/common.css"></style>s
+
+<script>
+    import fetch from '@system.fetch'
+    export default {
+        data: {
+            model: {},
+            isLoading: true,
+        }
+    }
+</script>
