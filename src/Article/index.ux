@@ -3,18 +3,19 @@
         <div if="isLoading" class="loading">
             <text>文章读取中...</text>
         </div>
-        <div else class="article-content">
+        <refresh else class="article-content" @refresh="refresh" refreshing="{{ isRefresh }}">
             <text class="title">{{ title }}</text>
             <text class="author">{{ author }}</text>
             <text class="article">{{ content }}</text>
-            <input class="btn" type="button" value="随机一篇" onclick="randomArticle">
-        </div>
+            <input class="btn" type="button" value="随机一篇" onclick="fetchArticle('random')">
+        </refresh>
     </div>
 </template>
 
 <style>
      @import '../Common/common.css';
     .article {
+        background-color: #ffffff;
         flex-direction: column;
         flex: 1;
     }
@@ -41,6 +42,7 @@
     .article-content .article {
         padding: 0 0 40px 0;
         color: #333333;
+        line-height: 46px;
     }
     .btn {
         width: 400px;
@@ -55,6 +57,7 @@
 
 <script>
     import fetch from '@system.fetch'
+    import prompt from '@system.prompt'
     export default {
         data: {
             model: {},
@@ -62,35 +65,29 @@
             content: '',
             author: '佚名',
             isLoading: true,
+            isRefresh: false,
+            isRandom: false
         },
         onInit () {
-            let _self = this;
-            this.isLoading = true;
-            fetch.fetch({
-                url: 'http://daren.vipc.me/api/article/daily',
-                success: function(res){
-                    let model = JSON.parse(res.data).model;
-                    _self.title = model.title;
-                    _self.content = model.content;
-                    _self.author = model.author;
-                    _self.isLoading = false;
-                },
-                fail: function(data, code) {
-                    console.log("handling fail, code=" + code);
-                }
-            })
+            this.fetchArticle('daily')
         },
-        randomArticle () {
+        refresh () {
+            this.isRefresh = true;
+            this.isRandom ? this.fetchArticle('random') : this.fetchArticle('daily');
+        },
+        fetchArticle(type) {
             let _self = this;
             this.isLoading = true;
+            type === 'random' && (this.isRandom = true);
             fetch.fetch({
-                url: 'http://daren.vipc.me/api/article/random',
+                url: `http://daren.vipc.me/api/article/${type}`,
                 success: function(res){
                     let model = JSON.parse(res.data).model;
                     _self.title = model.title;
                     _self.content = model.content;
                     _self.author = model.author;
                     _self.isLoading = false;
+                    _self.isRefresh = false;
                 },
                 fail: function(data, code) {
                     console.log("handling fail, code=" + code);

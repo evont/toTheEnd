@@ -91,12 +91,17 @@
 	      ]
 	    },
 	    {
-	      "type": "div",
-	      "attr": {},
+	      "type": "refresh",
+	      "attr": {
+	        "refreshing": function () {return this.isRefresh}
+	      },
 	      "shown": function () {return !(this.isLoading)},
 	      "classList": [
 	        "article-content"
 	      ],
+	      "events": {
+	        "refresh": "refresh"
+	      },
 	      "children": [
 	        {
 	          "type": "text",
@@ -135,7 +140,7 @@
 	            "btn"
 	          ],
 	          "events": {
-	            "click": "randomArticle"
+	            "click": function (evt) {this.fetchArticle('random',evt)}
 	          }
 	        }
 	      ]
@@ -177,6 +182,7 @@
 	    }
 	  },
 	  ".article": {
+	    "backgroundColor": "#ffffff",
 	    "flexDirection": "column",
 	    "flex": 1
 	  },
@@ -266,6 +272,7 @@
 	    "paddingBottom": "40px",
 	    "paddingLeft": "0px",
 	    "color": "#333333",
+	    "lineHeight": "46px",
 	    "_meta": {
 	      "ruleDef": [
 	        {
@@ -318,6 +325,10 @@
 	
 	var _system2 = _interopRequireDefault(_system);
 	
+	var _system3 = $app_require$('@app-module/system.prompt');
+	
+	var _system4 = _interopRequireDefault(_system3);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = {
@@ -326,36 +337,30 @@
 	        title: '读取中',
 	        content: '',
 	        author: '佚名',
-	        isLoading: true
+	        isLoading: true,
+	        isRefresh: false,
+	        isRandom: false
 	    },
 	    onInit: function onInit() {
-	        var _self = this;
-	        this.isLoading = true;
-	        _system2.default.fetch({
-	            url: 'http://daren.vipc.me/api/article/daily',
-	            success: function success(res) {
-	                var model = JSON.parse(res.data).model;
-	                _self.title = model.title;
-	                _self.content = model.content;
-	                _self.author = model.author;
-	                _self.isLoading = false;
-	            },
-	            fail: function fail(data, code) {
-	                console.log("handling fail, code=" + code);
-	            }
-	        });
+	        this.fetchArticle('daily');
 	    },
-	    randomArticle: function randomArticle() {
+	    refresh: function refresh() {
+	        this.isRefresh = true;
+	        this.isRandom ? this.fetchArticle('random') : this.fetchArticle('daily');
+	    },
+	    fetchArticle: function fetchArticle(type) {
 	        var _self = this;
 	        this.isLoading = true;
+	        type === 'random' && (this.isRandom = true);
 	        _system2.default.fetch({
-	            url: 'http://daren.vipc.me/api/article/random',
+	            url: 'http://daren.vipc.me/api/article/' + type,
 	            success: function success(res) {
 	                var model = JSON.parse(res.data).model;
 	                _self.title = model.title;
 	                _self.content = model.content;
 	                _self.author = model.author;
 	                _self.isLoading = false;
+	                _self.isRefresh = false;
 	            },
 	            fail: function fail(data, code) {
 	                console.log("handling fail, code=" + code);

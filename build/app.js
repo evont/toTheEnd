@@ -48,7 +48,7 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	var $app_script$ = __webpack_require__(18)
+	var $app_script$ = __webpack_require__(19)
 	
 	$app_define$('@app-application/app', [], function($app_require$, $app_exports$, $app_module$){
 	     $app_script$($app_module$, $app_exports$, $app_require$)
@@ -62,7 +62,7 @@
 
 /***/ },
 
-/***/ 18:
+/***/ 19:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(module, exports, $app_require$){'use strict';
@@ -71,7 +71,7 @@
 	  value: true
 	});
 	
-	var _util = __webpack_require__(19);
+	var _util = __webpack_require__(20);
 	
 	var _util2 = _interopRequireDefault(_util);
 	
@@ -82,12 +82,12 @@
 	  createShortcut: _util2.default.createShortcut,
 	  parseProxy: _util2.default.parseProxy
 	};
-	(exports.default || module.exports).manifest = {"package":"com.evont.goh","name":"观止","versionName":"1.0.0","versionCode":"1","minPlatformVersion":"101","icon":"/Common/logo.png","features":[{"name":"system.prompt"},{"name":"system.router"},{"name":"system.shortcut"},{"name":"system.fetch"}],"permissions":[{"origin":"*"}],"config":{"logLevel":"off"},"router":{"entry":"Index","pages":{"Index":{"component":"index"},"Article":{"component":"index"},"Books":{"component":"index"},"Voice":{"component":"index"}}},"display":{"titleBarBackgroundColor":"#f3f3f3","titleBarTextColor":"#414141","backgroundColor":"#ffffff","menu":true,"pages":{"Index":{"titleBarText":"观止","menu":false}}}};
+	(exports.default || module.exports).manifest = {"package":"com.evont.goh","name":"观止","versionName":"1.0.0","versionCode":"1","minPlatformVersion":"101","icon":"/Common/logo.png","features":[{"name":"system.prompt"},{"name":"system.router"},{"name":"system.shortcut"},{"name":"system.fetch"}],"permissions":[{"origin":"*"}],"config":{"logLevel":"off"},"router":{"entry":"Index","pages":{"Index":{"component":"index"},"Article":{"component":"index"},"Books":{"component":"index"},"Voice":{"component":"index"}}},"display":{"titleBarBackgroundColor":"#f3f3f3","titleBarTextColor":"#414141","backgroundColor":"#eeeeee","menu":true,"pages":{"Index":{"titleBarText":"观止","menu":false}}}};
 	}
 
 /***/ },
 
-/***/ 19:
+/***/ 20:
 /***/ function(module, exports) {
 
 	'use strict';
@@ -178,7 +178,7 @@
   else {
     window.createAppHandler = createAppHandler
     // H5注入manifest以获取features
-    global.manifest = {"package":"com.evont.goh","name":"观止","versionName":"1.0.0","versionCode":"1","minPlatformVersion":"101","icon":"/Common/logo.png","features":[{"name":"system.prompt"},{"name":"system.router"},{"name":"system.shortcut"},{"name":"system.fetch"}],"permissions":[{"origin":"*"}],"config":{"logLevel":"off"},"router":{"entry":"Index","pages":{"Index":{"component":"index"},"Article":{"component":"index"},"Books":{"component":"index"},"Voice":{"component":"index"}}},"display":{"titleBarBackgroundColor":"#f3f3f3","titleBarTextColor":"#414141","backgroundColor":"#ffffff","menu":true,"pages":{"Index":{"titleBarText":"观止","menu":false}}}};
+    global.manifest = {"package":"com.evont.goh","name":"观止","versionName":"1.0.0","versionCode":"1","minPlatformVersion":"101","icon":"/Common/logo.png","features":[{"name":"system.prompt"},{"name":"system.router"},{"name":"system.shortcut"},{"name":"system.fetch"}],"permissions":[{"origin":"*"}],"config":{"logLevel":"off"},"router":{"entry":"Index","pages":{"Index":{"component":"index"},"Article":{"component":"index"},"Books":{"component":"index"},"Voice":{"component":"index"}}},"display":{"titleBarBackgroundColor":"#f3f3f3","titleBarTextColor":"#414141","backgroundColor":"#eeeeee","menu":true,"pages":{"Index":{"titleBarText":"观止","menu":false}}}};
   }
 })();
 //# sourceMappingURL=app.js.map

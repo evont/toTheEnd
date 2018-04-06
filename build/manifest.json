@@ -47,7 +47,7 @@
   "display": {
     "titleBarBackgroundColor": "#f3f3f3",
     "titleBarTextColor": "#414141",
-    "backgroundColor": "#ffffff",
+    "backgroundColor": "#eeeeee",
     "menu": true,
     "pages": {
       "Index": {

@@ -49,10 +49,10 @@
 
 	__webpack_require__(7)
 	__webpack_require__(9)
-	__webpack_require__(12)
-	var $app_template$ = __webpack_require__(14)
-	var $app_style$ = __webpack_require__(15)
-	var $app_script$ = __webpack_require__(16)
+	__webpack_require__(13)
+	var $app_template$ = __webpack_require__(15)
+	var $app_style$ = __webpack_require__(16)
+	var $app_script$ = __webpack_require__(17)
 	
 	$app_define$('@app-component/index', [], function($app_require$, $app_exports$, $app_module$){
 	     $app_script$($app_module$, $app_exports$, $app_require$)
@@ -94,12 +94,17 @@
 	      ]
 	    },
 	    {
-	      "type": "div",
-	      "attr": {},
+	      "type": "refresh",
+	      "attr": {
+	        "refreshing": function () {return this.isRefresh}
+	      },
 	      "shown": function () {return !(this.isLoading)},
 	      "classList": [
 	        "article-content"
 	      ],
+	      "events": {
+	        "refresh": "refresh"
+	      },
 	      "children": [
 	        {
 	          "type": "text",
@@ -138,7 +143,7 @@
 	            "btn"
 	          ],
 	          "events": {
-	            "click": "randomArticle"
+	            "click": function (evt) {this.fetchArticle('random',evt)}
 	          }
 	        }
 	      ]
@@ -180,6 +185,7 @@
 	    }
 	  },
 	  ".article": {
+	    "backgroundColor": "#ffffff",
 	    "flexDirection": "column",
 	    "flex": 1
 	  },
@@ -269,6 +275,7 @@
 	    "paddingBottom": "40px",
 	    "paddingLeft": "0px",
 	    "color": "#333333",
+	    "lineHeight": "46px",
 	    "_meta": {
 	      "ruleDef": [
 	        {
@@ -394,6 +401,10 @@
 	
 	var _system2 = _interopRequireDefault(_system);
 	
+	var _system3 = $app_require$('@app-module/system.prompt');
+	
+	var _system4 = _interopRequireDefault(_system3);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = {
@@ -402,36 +413,30 @@
 	        title: '读取中',
 	        content: '',
 	        author: '佚名',
-	        isLoading: true
+	        isLoading: true,
+	        isRefresh: false,
+	        isRandom: false
 	    },
 	    onInit: function onInit() {
-	        var _self = this;
-	        this.isLoading = true;
-	        _system2.default.fetch({
-	            url: 'http://daren.vipc.me/api/article/daily',
-	            success: function success(res) {
-	                var model = JSON.parse(res.data).model;
-	                _self.title = model.title;
-	                _self.content = model.content;
-	                _self.author = model.author;
-	                _self.isLoading = false;
-	            },
-	            fail: function fail(data, code) {
-	                console.log("handling fail, code=" + code);
-	            }
-	        });
+	        this.fetchArticle('daily');
 	    },
-	    randomArticle: function randomArticle() {
+	    refresh: function refresh() {
+	        this.isRefresh = true;
+	        this.isRandom ? this.fetchArticle('random') : this.fetchArticle('daily');
+	    },
+	    fetchArticle: function fetchArticle(type) {
 	        var _self = this;
 	        this.isLoading = true;
+	        type === 'random' && (this.isRandom = true);
 	        _system2.default.fetch({
-	            url: 'http://daren.vipc.me/api/article/random',
+	            url: 'http://daren.vipc.me/api/article/' + type,
 	            success: function success(res) {
 	                var model = JSON.parse(res.data).model;
 	                _self.title = model.title;
 	                _self.content = model.content;
 	                _self.author = model.author;
 	                _self.isLoading = false;
+	                _self.isRefresh = false;
 	            },
 	            fail: function fail(data, code) {
 	                console.log("handling fail, code=" + code);
@@ -445,8 +450,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var $app_template$ = __webpack_require__(10)
-	var $app_style$ = __webpack_require__(5)
-	var $app_script$ = __webpack_require__(11)
+	var $app_style$ = __webpack_require__(11)
+	var $app_script$ = __webpack_require__(12)
 	
 	$app_define$('@app-component/voice', [], function($app_require$, $app_exports$, $app_module$){
 	     $app_script$($app_module$, $app_exports$, $app_require$)
@@ -466,14 +471,113 @@
 	  "type": "div",
 	  "attr": {},
 	  "classList": [
-	    "article"
+	    "voice"
 	  ],
 	  "children": [
 	    {
-	      "type": "text",
-	      "attr": {
-	        "value": "voice"
-	      }
+	      "type": "div",
+	      "attr": {},
+	      "shown": function () {return this.isLoading},
+	      "classList": [
+	        "loading"
+	      ],
+	      "children": [
+	        {
+	          "type": "text",
+	          "attr": {
+	            "value": "声音读取中..."
+	          }
+	        }
+	      ]
+	    },
+	    {
+	      "type": "div",
+	      "attr": {},
+	      "shown": function () {return !(this.isLoading)},
+	      "classList": [
+	        "voice-list"
+	      ],
+	      "children": [
+	        {
+	          "type": "div",
+	          "attr": {},
+	          "repeat": function () {return this.list},
+	          "classList": [
+	            "voice-item"
+	          ],
+	          "children": [
+	            {
+	              "type": "stack",
+	              "attr": {},
+	              "classList": [
+	                "cover"
+	              ],
+	              "children": [
+	                {
+	                  "type": "image",
+	                  "attr": {
+	                    "src": function () {return this.$item.cover}
+	                  }
+	                },
+	                {
+	                  "type": "div",
+	                  "attr": {},
+	                  "classList": [
+	                    "cover-tag"
+	                  ],
+	                  "children": [
+	                    {
+	                      "type": "text",
+	                      "attr": {
+	                        "value": function () {return this.$item.tag}
+	                      }
+	                    }
+	                  ]
+	                }
+	              ]
+	            },
+	            {
+	              "type": "div",
+	              "attr": {},
+	              "classList": [
+	                "intro"
+	              ],
+	              "children": [
+	                {
+	                  "type": "text",
+	                  "attr": {
+	                    "value": function () {return this.$item.name}
+	                  },
+	                  "classList": [
+	                    "intro-title"
+	                  ]
+	                },
+	                {
+	                  "type": "div",
+	                  "attr": {},
+	                  "classList": [
+	                    "intro-author"
+	                  ],
+	                  "children": [
+	                    {
+	                      "type": "text",
+	                      "attr": {
+	                        "value": function () {return '作者：' + (this.$item.author)}
+	                      }
+	                    },
+	                    {
+	                      "type": "text",
+	                      "attr": {
+	                        "value": function () {return '主播：' + (this.$item.host)}
+	                      }
+	                    }
+	                  ]
+	                }
+	              ]
+	            }
+	          ]
+	        }
+	      ]
 	    }
 	  ]
 	}
@@ -482,13 +586,284 @@
 /* 11 */
 /***/ function(module, exports) {
 
-	module.exports = function(module, exports, $app_require$){'use strict';
+	module.exports = {
+	  ".loading": {
+	    "flex": 1,
+	    "flexDirection": "column",
+	    "alignItems": "center",
+	    "justifyContent": "center"
+	  },
+	  ".loading text": {
+	    "fontSize": "32px",
+	    "textAlign": "center",
+	    "_meta": {
+	      "ruleDef": [
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "loading"
+	        },
+	        {
+	          "t": "d"
+	        },
+	        {
+	          "t": "t",
+	          "n": "text"
+	        }
+	      ]
+	    }
+	  },
+	  ".voice-list": {
+	    "flexDirection": "column",
+	    "flex": 1,
+	    "paddingTop": "10px",
+	    "paddingRight": "20px",
+	    "paddingBottom": "10px",
+	    "paddingLeft": "20px"
+	  },
+	  ".voice-item": {
+	    "flexDirection": "column",
+	    "flex": 1,
+	    "marginTop": "20px",
+	    "marginRight": "0px",
+	    "marginBottom": "20px",
+	    "marginLeft": "0px",
+	    "borderTopWidth": "1px",
+	    "borderRightWidth": "1px",
+	    "borderBottomWidth": "1px",
+	    "borderLeftWidth": "1px",
+	    "borderStyle": "solid",
+	    "borderTopColor": "#dddddd",
+	    "borderRightColor": "#dddddd",
+	    "borderBottomColor": "#dddddd",
+	    "borderLeftColor": "#dddddd"
+	  },
+	  ".voice-item .cover": {
+	    "height": "400px",
+	    "_meta": {
+	      "ruleDef": [
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "voice-item"
+	        },
+	        {
+	          "t": "d"
+	        },
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "cover"
+	        }
+	      ]
+	    }
+	  },
+	  ".voice-item .cover image": {
+	    "height": "400px",
+	    "resizeMode": "cover",
+	    "_meta": {
+	      "ruleDef": [
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "voice-item"
+	        },
+	        {
+	          "t": "d"
+	        },
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "cover"
+	        },
+	        {
+	          "t": "d"
+	        },
+	        {
+	          "t": "t",
+	          "n": "image"
+	        }
+	      ]
+	    }
+	  },
+	  ".voice-item .cover-tag": {
+	    "paddingTop": "10px",
+	    "paddingRight": "10px",
+	    "paddingBottom": "10px",
+	    "paddingLeft": "10px",
+	    "flex": 1,
+	    "justifyContent": "flex-start",
+	    "alignItems": "flex-start",
+	    "_meta": {
+	      "ruleDef": [
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "voice-item"
+	        },
+	        {
+	          "t": "d"
+	        },
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "cover-tag"
+	        }
+	      ]
+	    }
+	  },
+	  ".voice-item .cover-tag text": {
+	    "paddingTop": "8px",
+	    "paddingRight": "15px",
+	    "paddingBottom": "8px",
+	    "paddingLeft": "15px",
+	    "borderRadius": "8px",
+	    "backgroundColor": "rgba(0,0,0,0.8)",
+	    "color": "#ffffff",
+	    "fontSize": "18px",
+	    "_meta": {
+	      "ruleDef": [
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "voice-item"
+	        },
+	        {
+	          "t": "d"
+	        },
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "cover-tag"
+	        },
+	        {
+	          "t": "d"
+	        },
+	        {
+	          "t": "t",
+	          "n": "text"
+	        }
+	      ]
+	    }
+	  },
+	  ".voice-item .intro": {
+	    "height": "110px",
+	    "paddingTop": "15px",
+	    "paddingRight": "20px",
+	    "paddingBottom": "15px",
+	    "paddingLeft": "20px",
+	    "flexDirection": "column",
+	    "_meta": {
+	      "ruleDef": [
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "voice-item"
+	        },
+	        {
+	          "t": "d"
+	        },
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "intro"
+	        }
+	      ]
+	    }
+	  },
+	  ".voice-item .intro-title": {
+	    "color": "#333333",
+	    "fontSize": "32px",
+	    "_meta": {
+	      "ruleDef": [
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "voice-item"
+	        },
+	        {
+	          "t": "d"
+	        },
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "intro-title"
+	        }
+	      ]
+	    }
+	  },
+	  ".voice-item .intro-author text": {
+	    "color": "#999999",
+	    "fontSize": "24px",
+	    "marginRight": "20px",
+	    "_meta": {
+	      "ruleDef": [
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "voice-item"
+	        },
+	        {
+	          "t": "d"
+	        },
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "intro-author"
+	        },
+	        {
+	          "t": "d"
+	        },
+	        {
+	          "t": "t",
+	          "n": "text"
+	        }
+	      ]
+	    }
+	  }
+	}
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+	module.exports = function(module, exports, $app_require$){"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 	
-	var _system = $app_require$('@app-module/system.fetch');
+	var _system = $app_require$("@app-module/system.fetch");
 	
 	var _system2 = _interopRequireDefault(_system);
 	
@@ -496,18 +871,37 @@
 	
 	exports.default = {
 	    data: {
-	        model: {},
+	        list: [],
 	        isLoading: true
+	    },
+	    onInit: function onInit() {
+	        this.fetchVoice(1);
+	    },
+	    fetchVoice: function fetchVoice(page) {
+	        var _self = this;
+	        this.isLoading = true;
+	
+	        _system2.default.fetch({
+	            url: "http://daren.vipc.me/api/voice/list/" + page,
+	            success: function success(res) {
+	                var model = JSON.parse(res.data).model;
+	                _self.list = model.list;
+	                _self.isLoading = false;
+	            },
+	            fail: function fail(data, code) {
+	                console.log("handling fail, code=" + code);
+	            }
+	        });
 	    }
 	};}
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $app_template$ = __webpack_require__(4)
 	var $app_style$ = __webpack_require__(5)
-	var $app_script$ = __webpack_require__(13)
+	var $app_script$ = __webpack_require__(14)
 	
 	$app_define$('@app-component/books', [], function($app_require$, $app_exports$, $app_module$){
 	     $app_script$($app_module$, $app_exports$, $app_require$)
@@ -520,7 +914,7 @@
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	module.exports = function(module, exports, $app_require$){'use strict';
@@ -543,7 +937,7 @@
 	};}
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -615,10 +1009,13 @@
 	}
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 	module.exports = {
+	  ".tab-bar": {
+	    "backgroundColor": "#ffffff"
+	  },
 	  ".tab-bar-box": {
 	    "width": "160px",
 	    "justifyContent": "center",
@@ -686,7 +1083,7 @@
 	}
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	module.exports = function(module, exports, $app_require$){'use strict';

@@ -19,6 +19,9 @@
 </template>
 
 <style>
+.tab-bar {
+    background-color: #ffffff;
+}
 .tab-bar-box {
     width: 160px;
     justify-content: center;
