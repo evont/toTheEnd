@@ -4,8 +4,8 @@
             <list-item if="isRefreshing" class="loading"  type="loading">
                     <text>书架读取中...</text>
             </list-item>
-            <list-item else for="{{ list }}" class="voice-item"  type="voice-item">
-                <stack class="cover">
+            <list-item else for="{{ list }}" class="voice-item"  type="voice-item" onclick="playSound">
+                <stack class="cover" >
                     <image src="{{ $item.cover }}" ></image>
                     <div class="cover-tag">
                         <text>{{ $item.tag }}</text>
@@ -72,6 +72,8 @@
 
 <script>
     import fetch from '@system.fetch'
+    import audio from '@system.audio'
+    import prompt from '@system.prompt'
     export default {
         data: {
             list: [],
@@ -107,10 +109,33 @@
                 }
             })
         },
-        loadMore () {
-            // 后续加上是否有更多数据的判断
-            this.page += 1;
-            this.fetchVoice();   
+        playSound () {
+            audio.autoplay = true;
+            // 每日一文音频获取有问题，原因未知，播放功能搁置
+            audio.src = 'http://ws.stream.qqmusic.qq.com/M500001VfvsJ21xFqb.mp3?guid=ffffffff82def4af4b12b3cd9337d5e7&uin=346897220&vkey=6292F51E1E384E061FF02C31F716658E5C81F5594D561F2E88B854E81CAAB7806D5E4F103E55D33C16F3FAC506D1AB172DE8600B37E43FAD&fromtag=46';
+            audio.onplay = function() {
+                prompt.showToast({
+                    message: 'begin'
+                })
+            }
+            
+            audio.onloadeddata = function() {
+                prompt.showToast({
+                    message: 'plaing'
+                })
+                audio.play()
+            }
+            
+            audio.onended = function() {
+                prompt.showToast({
+                    message: 'end'
+                })
+            }
+            audio.onerror = function() {
+                prompt.showToast({
+                    message: 'error'
+                })
+            }
         }
     }
 </script>
