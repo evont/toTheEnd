@@ -47,9 +47,9 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var $app_template$ = __webpack_require__(10)
-	var $app_style$ = __webpack_require__(11)
-	var $app_script$ = __webpack_require__(12)
+	var $app_template$ = __webpack_require__(4)
+	var $app_style$ = __webpack_require__(5)
+	var $app_script$ = __webpack_require__(6)
 	
 	$app_define$('@app-component/index', [], function($app_require$, $app_exports$, $app_module$){
 	     $app_script$($app_module$, $app_exports$, $app_require$)
@@ -67,40 +67,26 @@
 /* 1 */,
 /* 2 */,
 /* 3 */,
-/* 4 */,
-/* 5 */,
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */,
-/* 10 */
+/* 4 */
 /***/ function(module, exports) {
 
 	module.exports = {
-	  "type": "refresh",
-	  "attr": {
-	    "refreshing": function () {return this.isRefreshing}
-	  },
-	  "events": {
-	    "refresh": "refresh"
-	  },
+	  "type": "list",
+	  "attr": {},
+	  "classList": [
+	    "article"
+	  ],
 	  "children": [
 	    {
-	      "type": "list",
-	      "attr": {},
-	      "classList": [
-	        "book-list"
-	      ],
-	      "events": {
-	        "scrollbottom": "loadMore"
+	      "type": "list-item",
+	      "attr": {
+	        "type": "article-item"
 	      },
 	      "children": [
 	        {
-	          "type": "list-item",
-	          "attr": {
-	            "type": "loading"
-	          },
-	          "shown": function () {return this.isRefreshing},
+	          "type": "div",
+	          "attr": {},
+	          "shown": function () {return this.isLoading},
 	          "classList": [
 	            "loading"
 	          ],
@@ -108,72 +94,24 @@
 	            {
 	              "type": "text",
 	              "attr": {
-	                "value": "书架读取中..."
+	                "value": "文章读取中..."
 	              }
 	            }
 	          ]
 	        },
 	        {
-	          "type": "list-item",
-	          "attr": {
-	            "type": "book-item"
-	          },
-	          "shown": function () {return !(this.isRefreshing)},
-	          "repeat": function () {return this.list},
+	          "type": "div",
+	          "attr": {},
+	          "shown": function () {return !(this.isLoading)},
+	          "classList": [
+	            "article-content"
+	          ],
 	          "children": [
 	            {
-	              "type": "div",
-	              "attr": {},
-	              "classList": [
-	                "book-item"
-	              ],
-	              "children": [
-	                {
-	                  "type": "image",
-	                  "attr": {
-	                    "src": function () {return this.$item.cover}
-	                  }
-	                },
-	                {
-	                  "type": "div",
-	                  "attr": {},
-	                  "classList": [
-	                    "intro"
-	                  ],
-	                  "children": [
-	                    {
-	                      "type": "text",
-	                      "attr": {
-	                        "value": function () {return this.$item.name}
-	                      },
-	                      "classList": [
-	                        "intro-title"
-	                      ]
-	                    },
-	                    {
-	                      "type": "text",
-	                      "attr": {
-	                        "value": function () {return this.$item.author}
-	                      },
-	                      "classList": [
-	                        "intro-author"
-	                      ]
-	                    },
-	                    {
-	                      "type": "a",
-	                      "attr": {
-	                        "value": "查看目录"
-	                      },
-	                      "classList": [
-	                        "btn"
-	                      ],
-	                      "events": {
-	                        "click": function (evt) {this.goCatelog(this.$item,evt)}
-	                      }
-	                    }
-	                  ]
-	                }
-	              ]
+	              "type": "text",
+	              "attr": {
+	                "value": function () {return this.content}
+	              }
 	            }
 	          ]
 	        }
@@ -183,7 +121,7 @@
 	}
 
 /***/ },
-/* 11 */
+/* 5 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -377,89 +315,89 @@
 	      ]
 	    }
 	  },
-	  ".book-list": {
-	    "flexDirection": "column",
-	    "flex": 1
+	  ".article": {
+	    "backgroundColor": "#ffffff"
+	  },
+	  ".article-content": {
+	    "paddingTop": "30px",
+	    "paddingRight": "30px",
+	    "paddingBottom": "30px",
+	    "paddingLeft": "30px"
+	  },
+	  ".article-content text": {
+	    "color": "#333333",
+	    "lineHeight": "46px",
+	    "_meta": {
+	      "ruleDef": [
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "article-content"
+	        },
+	        {
+	          "t": "d"
+	        },
+	        {
+	          "t": "t",
+	          "n": "text"
+	        }
+	      ]
+	    }
 	  }
 	}
 
 /***/ },
-/* 12 */
+/* 6 */
 /***/ function(module, exports) {
 
 	module.exports = function(module, exports, $app_require$){'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 	
-	var _system = $app_require$('@app-module/system.fetch');
+	var _system = $app_require$('@app-module/system.router');
 	
 	var _system2 = _interopRequireDefault(_system);
 	
-	var _system3 = $app_require$('@app-module/system.router');
+	var _system3 = $app_require$('@app-module/system.fetch');
 	
 	var _system4 = _interopRequireDefault(_system3);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = {
-	    data: {
-	        list: [],
-	        page: 1,
-	        isRefreshing: false
-	    },
-	    onInit: function onInit() {
-	        this.refresh({ refreshing: true });
-	        this.fetchBooks();
-	    },
-	    refresh: function refresh(evt) {
-	        this.isRefreshing = evt.refreshing;
-	        this.page = 1;
-	        this.fetchBooks();
-	    },
-	    fetchBooks: function fetchBooks() {
-	        var _self = this;
-	        var page = this.page;
-	        _system2.default.fetch({
-	            url: 'http://daren.vipc.me/api/book/list/' + page,
-	            success: function success(res) {
-	                var model = JSON.parse(res.data).model;
-	                if (page > 1) {
-	                    _self.list = _self.list.concat(model.list);
-	                } else {
-	                    _self.list = model.list;
-	                    _self.isRefreshing = false;
-	                }
-	            },
-	            fail: function fail(data, code) {
-	                console.log("handling fail, code=" + code);
-	            }
-	        });
-	    },
-	    loadMore: function loadMore() {
-	        this.page += 1;
-	        this.fetchBooks();
-	    },
-	    goCatelog: function goCatelog(item) {
-	        var info = {
-	            bid: item.bid,
-	            cover: item.cover,
-	            name: item.name,
-	            author: item.author
-	        };
-	        _system4.default.push({
-	            uri: '/Books/Catelog',
-	            params: {
-	                bid: item.bid,
-	                cover: item.cover,
-	                name: item.name,
-	                author: item.author
-	            }
-	        });
-	    }
+	  protected: {
+	    cid: '',
+	    bid: {},
+	    isLoading: true,
+	    title: '',
+	    content: ''
+	  },
+	  onInit: function onInit() {
+	    this.$page.setTitleBar({ text: this.title });
+	    this.fetchArticle();
+	  },
+	  fetchArticle: function fetchArticle() {
+	    var bid = this.bid,
+	        cid = this.cid,
+	        _self = this;
+	    _system4.default.fetch({
+	      url: 'http://daren.vipc.me/api/book/content/' + bid + '/' + cid,
+	      success: function success(res) {
+	        var model = JSON.parse(res.data).model;
+	        _self.content = model.content;
+	        _self.isLoading = false;
+	      },
+	      fail: function fail(data, code) {
+	        console.log("handling fail, code=" + code);
+	      }
+	    });
+	  }
 	};
 	
 	
@@ -467,23 +405,23 @@
 	var accessors = ['public', 'protected', 'private'];
 	
 	if (moduleOwn.data && accessors.some(function (acc) {
-	    return moduleOwn[acc];
+	  return moduleOwn[acc];
 	})) {
-	    throw new Error('页面VM对象中的属性data不可与"' + accessors.join(',') + '"同时存在，请使用private替换data名称');
+	  throw new Error('页面VM对象中的属性data不可与"' + accessors.join(',') + '"同时存在，请使用private替换data名称');
 	} else if (!moduleOwn.data) {
-	    moduleOwn.data = {};
-	    moduleOwn._descriptor = {};
-	    accessors.forEach(function (acc) {
-	        var accType = _typeof(moduleOwn[acc]);
-	        if (accType === 'object') {
-	            moduleOwn.data = Object.assign(moduleOwn.data, moduleOwn[acc]);
-	            for (var name in moduleOwn[acc]) {
-	                moduleOwn._descriptor[name] = { access: acc };
-	            }
-	        } else if (accType === 'function') {
-	            console.warn('页面VM对象中的属性' + acc + '的值不能是函数，请使用对象');
-	        }
-	    });
+	  moduleOwn.data = {};
+	  moduleOwn._descriptor = {};
+	  accessors.forEach(function (acc) {
+	    var accType = _typeof(moduleOwn[acc]);
+	    if (accType === 'object') {
+	      moduleOwn.data = Object.assign(moduleOwn.data, moduleOwn[acc]);
+	      for (var name in moduleOwn[acc]) {
+	        moduleOwn._descriptor[name] = { access: acc };
+	      }
+	    } else if (accType === 'function') {
+	      console.warn('页面VM对象中的属性' + acc + '的值不能是函数，请使用对象');
+	    }
+	  });
 	}}
 
 /***/ }

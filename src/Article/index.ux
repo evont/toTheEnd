@@ -1,15 +1,19 @@
 <template>
-    <div class="article">
-        <div if="isLoading" class="loading">
-            <text>文章读取中...</text>
-        </div>
-        <refresh else class="article-content" @refresh="refresh" refreshing="{{ isRefresh }}">
-            <text class="title">{{ title }}</text>
-            <text class="author">{{ author }}</text>
-            <text class="article">{{ content }}</text>
-            <input class="btn" type="button" value="随机一篇" onclick="fetchArticle('random')">
-        </refresh>
-    </div>
+    <refresh @refresh="refresh" refreshing="{{isRefreshing}}">
+        <list class="article">
+            <list-item type="article-item">
+                <div if="isRefreshing" class="loading">
+                    <text>文章读取中...</text>
+                </div>
+                <div else class="article-content">
+                    <text class="title">{{ title }}</text>
+                    <text class="author">{{ author }}</text>
+                    <text class="content">{{ content }}</text>
+                    <input class="btn" type="button" value="随机一篇" onclick="fetchArticle('random')">
+                </div>
+            </list-item>
+        </list>
+    </refresh>
 </template>
 
 <style>
@@ -17,10 +21,10 @@
     .article {
         background-color: #ffffff;
         flex-direction: column;
-        flex: 1;
+        width: 100%;
     }
     .article-content {
-        flex: 1;
+        width: 100%;
         flex-direction: column;
         padding: 10px 40px;
         align-items: center;
@@ -39,7 +43,7 @@
         color: #999999;
         text-align: center;
     }
-    .article-content .article {
+    .article-content .content {
         padding: 0 0 40px 0;
         color: #333333;
         line-height: 46px;
@@ -57,22 +61,21 @@
 
 <script>
     import fetch from '@system.fetch'
-    import prompt from '@system.prompt'
     export default {
         data: {
             model: {},
             title: '读取中',
             content: '',
             author: '佚名',
-            isLoading: true,
-            isRefresh: false,
+            isRefreshing: false,
             isRandom: false
         },
         onInit () {
-            this.fetchArticle('daily')
+            this.fetchArticle('daily');
+            this.refresh({refreshing: true})
         },
-        refresh () {
-            this.isRefresh = true;
+        refresh (evt) {
+            this.isRefreshing = evt.refreshing;
             this.isRandom ? this.fetchArticle('random') : this.fetchArticle('daily');
         },
         fetchArticle(type) {
@@ -86,8 +89,7 @@
                     _self.title = model.title;
                     _self.content = model.content;
                     _self.author = model.author;
-                    _self.isLoading = false;
-                    _self.isRefresh = false;
+                    _self.isRefreshing = false;
                 },
                 fail: function(data, code) {
                     console.log("handling fail, code=" + code);

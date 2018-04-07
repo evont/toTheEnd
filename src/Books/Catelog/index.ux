@@ -1,0 +1,72 @@
+<template>
+  <div class="catelog">
+      <div class="book-item book-item_grey">
+          <image src="{{ cover }}" ></image>
+          <div class="intro">
+              <text class="intro-title">{{ name }}</text>
+              <text class="intro-author">{{ author }}</text>
+          </div>
+      </div>
+      <list class="catelog-list">
+          <list-item class="catelog-item" for="{{ list }}" type="catelog-item" @click="goArticle($item)">
+              <text>{{ $item.title }}</text>
+          </list-item>
+      </list>
+  </div>
+</template>
+
+<style>
+  @import '../../Common/common.css';
+  @import '../book.css';
+  .catelog {
+    flex-direction: column;
+    flex: 1;
+  }
+  .catelog-item {
+    padding: 30px;
+    background-color: #ffffff;
+    border-width: 0 0 1px 0;
+    border-color: #dddddd;
+  }
+  .catelog-item text {
+    color: #333333;
+  }
+</style>
+
+<script>
+  import router from '@system.router'
+  import fetch from '@system.fetch'
+  export default {
+    protected: {
+      bid: '',
+      cover: '',
+      name: '',
+      author: '',
+      list: []
+    },
+    onInit () {
+      this.$page.setTitleBar({ text: this.name })
+      this.fetchCateLog();
+    },
+    fetchCateLog () {
+      let bid = this.bid,
+          _self = this;
+      fetch.fetch({
+          url: `http://daren.vipc.me/api/book/catelog/${bid}`,
+          success: function(res){
+              let model = JSON.parse(res.data).model;
+              _self.list = model.catelog;
+          },
+          fail: function(data, code) {
+              console.log("handling fail, code=" + code);
+          }
+      })
+    },
+    goArticle (item) {
+      router.push({
+          uri: '/Books/Article',
+          params: { cid: item.cid, bid: this.bid, title: item.title }
+      })
+    }
+  }
+</script>

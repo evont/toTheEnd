@@ -1,0 +1,61 @@
+<template>
+    <list class="article">
+        <list-item type="article-item">
+            <div if="isLoading" class="loading">
+                <text>文章读取中...</text>
+            </div>
+            <div else class="article-content">
+                <text>{{ content }}</text>
+            </div>
+        </list-item>
+    </list>
+</template>
+
+<style>
+@import '../../Common/common.css';
+@import '../book.css';
+.article {
+    background-color: #ffffff;
+}
+.article-content {
+    padding: 30px;
+}
+.article-content text {
+    color: #333333;
+    line-height: 46px;
+}
+</style>
+
+<script>
+  import router from '@system.router'
+  import fetch from '@system.fetch'
+  export default {
+    protected: {
+        cid: '',
+        bid: {},
+        isLoading: true,
+        title: '',
+        content: '',
+    },
+    onInit () {
+      this.$page.setTitleBar({ text: this.title })
+      this.fetchArticle();
+    },
+    fetchArticle () {
+      let bid = this.bid,
+          cid = this.cid,
+          _self = this;
+      fetch.fetch({
+          url: `http://daren.vipc.me/api/book/content/${bid}/${cid}`,
+          success: function(res){
+              let model = JSON.parse(res.data).model;
+              _self.content = model.content;
+              _self.isLoading = false;
+          },
+          fail: function(data, code) {
+              console.log("handling fail, code=" + code);
+          }
+      })
+    }
+  }
+</script>

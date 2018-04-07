@@ -47,12 +47,12 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(7)
-	__webpack_require__(9)
 	__webpack_require__(13)
-	var $app_template$ = __webpack_require__(15)
-	var $app_style$ = __webpack_require__(16)
-	var $app_script$ = __webpack_require__(17)
+	__webpack_require__(15)
+	__webpack_require__(19)
+	var $app_template$ = __webpack_require__(21)
+	var $app_style$ = __webpack_require__(22)
+	var $app_script$ = __webpack_require__(23)
 	
 	$app_define$('@app-component/index', [], function($app_require$, $app_exports$, $app_module$){
 	     $app_script$($app_module$, $app_exports$, $app_require$)
@@ -71,80 +71,94 @@
 /***/ function(module, exports) {
 
 	module.exports = {
-	  "type": "div",
-	  "attr": {},
-	  "classList": [
-	    "article"
-	  ],
+	  "type": "refresh",
+	  "attr": {
+	    "refreshing": function () {return this.isRefreshing}
+	  },
+	  "events": {
+	    "refresh": "refresh"
+	  },
 	  "children": [
 	    {
-	      "type": "div",
+	      "type": "list",
 	      "attr": {},
-	      "shown": function () {return this.isLoading},
 	      "classList": [
-	        "loading"
+	        "article"
 	      ],
 	      "children": [
 	        {
-	          "type": "text",
+	          "type": "list-item",
 	          "attr": {
-	            "value": "文章读取中..."
-	          }
-	        }
-	      ]
-	    },
-	    {
-	      "type": "refresh",
-	      "attr": {
-	        "refreshing": function () {return this.isRefresh}
-	      },
-	      "shown": function () {return !(this.isLoading)},
-	      "classList": [
-	        "article-content"
-	      ],
-	      "events": {
-	        "refresh": "refresh"
-	      },
-	      "children": [
-	        {
-	          "type": "text",
-	          "attr": {
-	            "value": function () {return this.title}
+	            "type": "article-item"
 	          },
-	          "classList": [
-	            "title"
+	          "children": [
+	            {
+	              "type": "div",
+	              "attr": {},
+	              "shown": function () {return this.isRefreshing},
+	              "classList": [
+	                "loading"
+	              ],
+	              "children": [
+	                {
+	                  "type": "text",
+	                  "attr": {
+	                    "value": "文章读取中..."
+	                  }
+	                }
+	              ]
+	            },
+	            {
+	              "type": "div",
+	              "attr": {},
+	              "shown": function () {return !(this.isRefreshing)},
+	              "classList": [
+	                "article-content"
+	              ],
+	              "children": [
+	                {
+	                  "type": "text",
+	                  "attr": {
+	                    "value": function () {return this.title}
+	                  },
+	                  "classList": [
+	                    "title"
+	                  ]
+	                },
+	                {
+	                  "type": "text",
+	                  "attr": {
+	                    "value": function () {return this.author}
+	                  },
+	                  "classList": [
+	                    "author"
+	                  ]
+	                },
+	                {
+	                  "type": "text",
+	                  "attr": {
+	                    "value": function () {return this.content}
+	                  },
+	                  "classList": [
+	                    "content"
+	                  ]
+	                },
+	                {
+	                  "type": "input",
+	                  "attr": {
+	                    "type": "button",
+	                    "value": "随机一篇"
+	                  },
+	                  "classList": [
+	                    "btn"
+	                  ],
+	                  "events": {
+	                    "click": function (evt) {this.fetchArticle('random',evt)}
+	                  }
+	                }
+	              ]
+	            }
 	          ]
-	        },
-	        {
-	          "type": "text",
-	          "attr": {
-	            "value": function () {return this.author}
-	          },
-	          "classList": [
-	            "author"
-	          ]
-	        },
-	        {
-	          "type": "text",
-	          "attr": {
-	            "value": function () {return this.content}
-	          },
-	          "classList": [
-	            "article"
-	          ]
-	        },
-	        {
-	          "type": "input",
-	          "attr": {
-	            "type": "button",
-	            "value": "随机一篇"
-	          },
-	          "classList": [
-	            "btn"
-	          ],
-	          "events": {
-	            "click": function (evt) {this.fetchArticle('random',evt)}
-	          }
 	        }
 	      ]
 	    }
@@ -157,8 +171,9 @@
 
 	module.exports = {
 	  ".loading": {
-	    "flex": 1,
-	    "flexDirection": "column",
+	    "height": "300px",
+	    "width": "100%",
+	    "color": "#999999",
 	    "alignItems": "center",
 	    "justifyContent": "center"
 	  },
@@ -187,10 +202,10 @@
 	  ".article": {
 	    "backgroundColor": "#ffffff",
 	    "flexDirection": "column",
-	    "flex": 1
+	    "width": "100%"
 	  },
 	  ".article-content": {
-	    "flex": 1,
+	    "width": "100%",
 	    "flexDirection": "column",
 	    "paddingTop": "10px",
 	    "paddingRight": "40px",
@@ -269,7 +284,7 @@
 	      ]
 	    }
 	  },
-	  ".article-content .article": {
+	  ".article-content .content": {
 	    "paddingTop": "0px",
 	    "paddingRight": "0px",
 	    "paddingBottom": "40px",
@@ -293,7 +308,7 @@
 	          "n": "class",
 	          "i": false,
 	          "a": "element",
-	          "v": "article"
+	          "v": "content"
 	        }
 	      ]
 	    }
@@ -314,33 +329,130 @@
 
 /***/ },
 /* 3 */,
-/* 4 */
+/* 4 */,
+/* 5 */,
+/* 6 */,
+/* 7 */,
+/* 8 */,
+/* 9 */,
+/* 10 */
 /***/ function(module, exports) {
 
 	module.exports = {
-	  "type": "div",
-	  "attr": {},
-	  "classList": [
-	    "article"
-	  ],
+	  "type": "refresh",
+	  "attr": {
+	    "refreshing": function () {return this.isRefreshing}
+	  },
+	  "events": {
+	    "refresh": "refresh"
+	  },
 	  "children": [
 	    {
-	      "type": "text",
-	      "attr": {
-	        "value": "boook"
-	      }
+	      "type": "list",
+	      "attr": {},
+	      "classList": [
+	        "book-list"
+	      ],
+	      "events": {
+	        "scrollbottom": "loadMore"
+	      },
+	      "children": [
+	        {
+	          "type": "list-item",
+	          "attr": {
+	            "type": "loading"
+	          },
+	          "shown": function () {return this.isRefreshing},
+	          "classList": [
+	            "loading"
+	          ],
+	          "children": [
+	            {
+	              "type": "text",
+	              "attr": {
+	                "value": "书架读取中..."
+	              }
+	            }
+	          ]
+	        },
+	        {
+	          "type": "list-item",
+	          "attr": {
+	            "type": "book-item"
+	          },
+	          "shown": function () {return !(this.isRefreshing)},
+	          "repeat": function () {return this.list},
+	          "children": [
+	            {
+	              "type": "div",
+	              "attr": {},
+	              "classList": [
+	                "book-item"
+	              ],
+	              "children": [
+	                {
+	                  "type": "image",
+	                  "attr": {
+	                    "src": function () {return this.$item.cover}
+	                  }
+	                },
+	                {
+	                  "type": "div",
+	                  "attr": {},
+	                  "classList": [
+	                    "intro"
+	                  ],
+	                  "children": [
+	                    {
+	                      "type": "text",
+	                      "attr": {
+	                        "value": function () {return this.$item.name}
+	                      },
+	                      "classList": [
+	                        "intro-title"
+	                      ]
+	                    },
+	                    {
+	                      "type": "text",
+	                      "attr": {
+	                        "value": function () {return this.$item.author}
+	                      },
+	                      "classList": [
+	                        "intro-author"
+	                      ]
+	                    },
+	                    {
+	                      "type": "a",
+	                      "attr": {
+	                        "value": "查看目录"
+	                      },
+	                      "classList": [
+	                        "btn"
+	                      ],
+	                      "events": {
+	                        "click": function (evt) {this.goCatelog(this.$item,evt)}
+	                      }
+	                    }
+	                  ]
+	                }
+	              ]
+	            }
+	          ]
+	        }
+	      ]
 	    }
 	  ]
 	}
 
 /***/ },
-/* 5 */
+/* 11 */
 /***/ function(module, exports) {
 
 	module.exports = {
 	  ".loading": {
-	    "flex": 1,
-	    "flexDirection": "column",
+	    "height": "300px",
+	    "width": "100%",
+	    "color": "#999999",
 	    "alignItems": "center",
 	    "justifyContent": "center"
 	  },
@@ -365,17 +477,182 @@
 	        }
 	      ]
 	    }
+	  },
+	  ".book-item": {
+	    "width": "100%",
+	    "height": "380px",
+	    "paddingTop": "0px",
+	    "paddingRight": "30px",
+	    "paddingBottom": "0px",
+	    "paddingLeft": "30px",
+	    "backgroundColor": "#ffffff",
+	    "borderTopWidth": "0px",
+	    "borderRightWidth": "0px",
+	    "borderBottomWidth": "1px",
+	    "borderLeftWidth": "0px",
+	    "borderTopColor": "#dddddd",
+	    "borderRightColor": "#dddddd",
+	    "borderBottomColor": "#dddddd",
+	    "borderLeftColor": "#dddddd",
+	    "alignItems": "center"
+	  },
+	  ".book-item_grey": {
+	    "backgroundColor": "#f3f3f3"
+	  },
+	  ".book-item image": {
+	    "height": "300px",
+	    "width": "220px",
+	    "resizeMode": "contain",
+	    "_meta": {
+	      "ruleDef": [
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "book-item"
+	        },
+	        {
+	          "t": "d"
+	        },
+	        {
+	          "t": "t",
+	          "n": "image"
+	        }
+	      ]
+	    }
+	  },
+	  ".book-item .intro": {
+	    "flexDirection": "column",
+	    "paddingLeft": "30px",
+	    "justifyContent": "center",
+	    "height": "300px",
+	    "_meta": {
+	      "ruleDef": [
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "book-item"
+	        },
+	        {
+	          "t": "d"
+	        },
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "intro"
+	        }
+	      ]
+	    }
+	  },
+	  ".book-item .intro-title": {
+	    "fontSize": "40px",
+	    "color": "#333333",
+	    "_meta": {
+	      "ruleDef": [
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "book-item"
+	        },
+	        {
+	          "t": "d"
+	        },
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "intro-title"
+	        }
+	      ]
+	    }
+	  },
+	  ".book-item .intro-author": {
+	    "marginTop": "20px",
+	    "fontSize": "22px",
+	    "_meta": {
+	      "ruleDef": [
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "book-item"
+	        },
+	        {
+	          "t": "d"
+	        },
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "intro-author"
+	        }
+	      ]
+	    }
+	  },
+	  ".book-item .btn": {
+	    "height": "60px",
+	    "width": "160px",
+	    "marginTop": "40px",
+	    "borderTopWidth": "1px",
+	    "borderRightWidth": "1px",
+	    "borderBottomWidth": "1px",
+	    "borderLeftWidth": "1px",
+	    "borderStyle": "solid",
+	    "borderTopColor": "#999999",
+	    "borderRightColor": "#999999",
+	    "borderBottomColor": "#999999",
+	    "borderLeftColor": "#999999",
+	    "borderRadius": "30px",
+	    "textAlign": "center",
+	    "color": "#999999",
+	    "backgroundColor": "#f3f3f3",
+	    "fontSize": "20px",
+	    "_meta": {
+	      "ruleDef": [
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "book-item"
+	        },
+	        {
+	          "t": "d"
+	        },
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "btn"
+	        }
+	      ]
+	    }
+	  },
+	  ".book-list": {
+	    "flexDirection": "column",
+	    "flex": 1
 	  }
 	}
 
 /***/ },
-/* 6 */,
-/* 7 */
+/* 12 */,
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var $app_template$ = __webpack_require__(1)
 	var $app_style$ = __webpack_require__(2)
-	var $app_script$ = __webpack_require__(8)
+	var $app_script$ = __webpack_require__(14)
 	
 	$app_define$('@app-component/article', [], function($app_require$, $app_exports$, $app_module$){
 	     $app_script$($app_module$, $app_exports$, $app_require$)
@@ -388,7 +665,7 @@
 
 
 /***/ },
-/* 8 */
+/* 14 */
 /***/ function(module, exports) {
 
 	module.exports = function(module, exports, $app_require$){'use strict';
@@ -401,10 +678,6 @@
 	
 	var _system2 = _interopRequireDefault(_system);
 	
-	var _system3 = $app_require$('@app-module/system.prompt');
-	
-	var _system4 = _interopRequireDefault(_system3);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = {
@@ -413,15 +686,15 @@
 	        title: '读取中',
 	        content: '',
 	        author: '佚名',
-	        isLoading: true,
-	        isRefresh: false,
+	        isRefreshing: false,
 	        isRandom: false
 	    },
 	    onInit: function onInit() {
 	        this.fetchArticle('daily');
+	        this.refresh({ refreshing: true });
 	    },
-	    refresh: function refresh() {
-	        this.isRefresh = true;
+	    refresh: function refresh(evt) {
+	        this.isRefreshing = evt.refreshing;
 	        this.isRandom ? this.fetchArticle('random') : this.fetchArticle('daily');
 	    },
 	    fetchArticle: function fetchArticle(type) {
@@ -435,8 +708,7 @@
 	                _self.title = model.title;
 	                _self.content = model.content;
 	                _self.author = model.author;
-	                _self.isLoading = false;
-	                _self.isRefresh = false;
+	                _self.isRefreshing = false;
 	            },
 	            fail: function fail(data, code) {
 	                console.log("handling fail, code=" + code);
@@ -446,12 +718,12 @@
 	};}
 
 /***/ },
-/* 9 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var $app_template$ = __webpack_require__(10)
-	var $app_style$ = __webpack_require__(11)
-	var $app_script$ = __webpack_require__(12)
+	var $app_template$ = __webpack_require__(16)
+	var $app_style$ = __webpack_require__(17)
+	var $app_script$ = __webpack_require__(18)
 	
 	$app_define$('@app-component/voice', [], function($app_require$, $app_exports$, $app_module$){
 	     $app_script$($app_module$, $app_exports$, $app_require$)
@@ -464,43 +736,52 @@
 
 
 /***/ },
-/* 10 */
+/* 16 */
 /***/ function(module, exports) {
 
 	module.exports = {
-	  "type": "div",
-	  "attr": {},
-	  "classList": [
-	    "voice"
-	  ],
+	  "type": "refresh",
+	  "attr": {
+	    "refreshing": function () {return this.isRefreshing}
+	  },
+	  "events": {
+	    "refresh": "refresh"
+	  },
 	  "children": [
 	    {
-	      "type": "div",
+	      "type": "list",
 	      "attr": {},
-	      "shown": function () {return this.isLoading},
-	      "classList": [
-	        "loading"
-	      ],
-	      "children": [
-	        {
-	          "type": "text",
-	          "attr": {
-	            "value": "声音读取中..."
-	          }
-	        }
-	      ]
-	    },
-	    {
-	      "type": "div",
-	      "attr": {},
-	      "shown": function () {return !(this.isLoading)},
 	      "classList": [
 	        "voice-list"
 	      ],
+	      "events": {
+	        "scrollbottom": "loadMore"
+	      },
 	      "children": [
 	        {
-	          "type": "div",
-	          "attr": {},
+	          "type": "list-item",
+	          "attr": {
+	            "type": "loading"
+	          },
+	          "shown": function () {return this.isRefreshing},
+	          "classList": [
+	            "loading"
+	          ],
+	          "children": [
+	            {
+	              "type": "text",
+	              "attr": {
+	                "value": "书架读取中..."
+	              }
+	            }
+	          ]
+	        },
+	        {
+	          "type": "list-item",
+	          "attr": {
+	            "type": "voice-item"
+	          },
+	          "shown": function () {return !(this.isRefreshing)},
 	          "repeat": function () {return this.list},
 	          "classList": [
 	            "voice-item"
@@ -583,13 +864,14 @@
 	}
 
 /***/ },
-/* 11 */
+/* 17 */
 /***/ function(module, exports) {
 
 	module.exports = {
 	  ".loading": {
-	    "flex": 1,
-	    "flexDirection": "column",
+	    "height": "300px",
+	    "width": "100%",
+	    "color": "#999999",
 	    "alignItems": "center",
 	    "justifyContent": "center"
 	  },
@@ -854,7 +1136,7 @@
 	}
 
 /***/ },
-/* 12 */
+/* 18 */
 /***/ function(module, exports) {
 
 	module.exports = function(module, exports, $app_require$){"use strict";
@@ -872,36 +1154,50 @@
 	exports.default = {
 	    data: {
 	        list: [],
-	        isLoading: true
+	        page: 1,
+	        isRefreshing: false
 	    },
 	    onInit: function onInit() {
-	        this.fetchVoice(1);
+	        this.refresh({ refreshing: true });
+	        this.fetchVoice();
 	    },
-	    fetchVoice: function fetchVoice(page) {
+	    refresh: function refresh(evt) {
+	        this.isRefreshing = evt.refreshing;
+	        this.page = 1;
+	        this.fetchVoice();
+	    },
+	    fetchVoice: function fetchVoice() {
 	        var _self = this;
-	        this.isLoading = true;
-	
+	        var page = this.page;
 	        _system2.default.fetch({
 	            url: "http://daren.vipc.me/api/voice/list/" + page,
 	            success: function success(res) {
 	                var model = JSON.parse(res.data).model;
-	                _self.list = model.list;
-	                _self.isLoading = false;
+	                if (page > 1) {
+	                    _self.list = _self.list.concat(model.list);
+	                } else {
+	                    _self.list = model.list;
+	                    _self.isRefreshing = false;
+	                }
 	            },
 	            fail: function fail(data, code) {
 	                console.log("handling fail, code=" + code);
 	            }
 	        });
+	    },
+	    loadMore: function loadMore() {
+	        this.page += 1;
+	        this.fetchVoice();
 	    }
 	};}
 
 /***/ },
-/* 13 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var $app_template$ = __webpack_require__(4)
-	var $app_style$ = __webpack_require__(5)
-	var $app_script$ = __webpack_require__(14)
+	var $app_template$ = __webpack_require__(10)
+	var $app_style$ = __webpack_require__(11)
+	var $app_script$ = __webpack_require__(20)
 	
 	$app_define$('@app-component/books', [], function($app_require$, $app_exports$, $app_module$){
 	     $app_script$($app_module$, $app_exports$, $app_require$)
@@ -914,7 +1210,7 @@
 
 
 /***/ },
-/* 14 */
+/* 20 */
 /***/ function(module, exports) {
 
 	module.exports = function(module, exports, $app_require$){'use strict';
@@ -927,17 +1223,71 @@
 	
 	var _system2 = _interopRequireDefault(_system);
 	
+	var _system3 = $app_require$('@app-module/system.router');
+	
+	var _system4 = _interopRequireDefault(_system3);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = {
 	    data: {
-	        model: {},
-	        isLoading: true
+	        list: [],
+	        page: 1,
+	        isRefreshing: false
+	    },
+	    onInit: function onInit() {
+	        this.refresh({ refreshing: true });
+	        this.fetchBooks();
+	    },
+	    refresh: function refresh(evt) {
+	        this.isRefreshing = evt.refreshing;
+	        this.page = 1;
+	        this.fetchBooks();
+	    },
+	    fetchBooks: function fetchBooks() {
+	        var _self = this;
+	        var page = this.page;
+	        _system2.default.fetch({
+	            url: 'http://daren.vipc.me/api/book/list/' + page,
+	            success: function success(res) {
+	                var model = JSON.parse(res.data).model;
+	                if (page > 1) {
+	                    _self.list = _self.list.concat(model.list);
+	                } else {
+	                    _self.list = model.list;
+	                    _self.isRefreshing = false;
+	                }
+	            },
+	            fail: function fail(data, code) {
+	                console.log("handling fail, code=" + code);
+	            }
+	        });
+	    },
+	    loadMore: function loadMore() {
+	        this.page += 1;
+	        this.fetchBooks();
+	    },
+	    goCatelog: function goCatelog(item) {
+	        var info = {
+	            bid: item.bid,
+	            cover: item.cover,
+	            name: item.name,
+	            author: item.author
+	        };
+	        _system4.default.push({
+	            uri: '/Books/Catelog',
+	            params: {
+	                bid: item.bid,
+	                cover: item.cover,
+	                name: item.name,
+	                author: item.author
+	            }
+	        });
 	    }
 	};}
 
 /***/ },
-/* 15 */
+/* 21 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -1009,7 +1359,7 @@
 	}
 
 /***/ },
-/* 16 */
+/* 22 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -1083,7 +1433,7 @@
 	}
 
 /***/ },
-/* 17 */
+/* 23 */
 /***/ function(module, exports) {
 
 	module.exports = function(module, exports, $app_require$){'use strict';

@@ -47,9 +47,9 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var $app_template$ = __webpack_require__(10)
-	var $app_style$ = __webpack_require__(11)
-	var $app_script$ = __webpack_require__(12)
+	var $app_template$ = __webpack_require__(7)
+	var $app_style$ = __webpack_require__(8)
+	var $app_script$ = __webpack_require__(9)
 	
 	$app_define$('@app-component/index', [], function($app_require$, $app_exports$, $app_module$){
 	     $app_script$($app_module$, $app_exports$, $app_require$)
@@ -70,110 +70,84 @@
 /* 4 */,
 /* 5 */,
 /* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */,
-/* 10 */
+/* 7 */
 /***/ function(module, exports) {
 
 	module.exports = {
-	  "type": "refresh",
-	  "attr": {
-	    "refreshing": function () {return this.isRefreshing}
-	  },
-	  "events": {
-	    "refresh": "refresh"
-	  },
+	  "type": "div",
+	  "attr": {},
+	  "classList": [
+	    "catelog"
+	  ],
 	  "children": [
 	    {
-	      "type": "list",
+	      "type": "div",
 	      "attr": {},
 	      "classList": [
-	        "book-list"
+	        "book-item",
+	        "book-item_grey"
 	      ],
-	      "events": {
-	        "scrollbottom": "loadMore"
-	      },
 	      "children": [
 	        {
-	          "type": "list-item",
+	          "type": "image",
 	          "attr": {
-	            "type": "loading"
-	          },
-	          "shown": function () {return this.isRefreshing},
+	            "src": function () {return this.cover}
+	          }
+	        },
+	        {
+	          "type": "div",
+	          "attr": {},
 	          "classList": [
-	            "loading"
+	            "intro"
 	          ],
 	          "children": [
 	            {
 	              "type": "text",
 	              "attr": {
-	                "value": "书架读取中..."
-	              }
+	                "value": function () {return this.name}
+	              },
+	              "classList": [
+	                "intro-title"
+	              ]
+	            },
+	            {
+	              "type": "text",
+	              "attr": {
+	                "value": function () {return this.author}
+	              },
+	              "classList": [
+	                "intro-author"
+	              ]
 	            }
 	          ]
-	        },
+	        }
+	      ]
+	    },
+	    {
+	      "type": "list",
+	      "attr": {},
+	      "classList": [
+	        "catelog-list"
+	      ],
+	      "children": [
 	        {
 	          "type": "list-item",
 	          "attr": {
-	            "type": "book-item"
+	            "type": "catelog-item"
 	          },
-	          "shown": function () {return !(this.isRefreshing)},
+	          "classList": [
+	            "catelog-item"
+	          ],
 	          "repeat": function () {return this.list},
+	          "events": {
+	            "click": function (evt) {this.goArticle(this.$item,evt)}
+	          },
 	          "children": [
 	            {
-	              "type": "div",
-	              "attr": {},
-	              "classList": [
-	                "book-item"
-	              ],
-	              "children": [
-	                {
-	                  "type": "image",
-	                  "attr": {
-	                    "src": function () {return this.$item.cover}
-	                  }
-	                },
-	                {
-	                  "type": "div",
-	                  "attr": {},
-	                  "classList": [
-	                    "intro"
-	                  ],
-	                  "children": [
-	                    {
-	                      "type": "text",
-	                      "attr": {
-	                        "value": function () {return this.$item.name}
-	                      },
-	                      "classList": [
-	                        "intro-title"
-	                      ]
-	                    },
-	                    {
-	                      "type": "text",
-	                      "attr": {
-	                        "value": function () {return this.$item.author}
-	                      },
-	                      "classList": [
-	                        "intro-author"
-	                      ]
-	                    },
-	                    {
-	                      "type": "a",
-	                      "attr": {
-	                        "value": "查看目录"
-	                      },
-	                      "classList": [
-	                        "btn"
-	                      ],
-	                      "events": {
-	                        "click": function (evt) {this.goCatelog(this.$item,evt)}
-	                      }
-	                    }
-	                  ]
-	                }
-	              ]
+	              "type": "text",
+	              "attr": {
+	                "value": function () {return this.$item.title}
+	              }
 	            }
 	          ]
 	        }
@@ -183,7 +157,7 @@
 	}
 
 /***/ },
-/* 11 */
+/* 8 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -377,89 +351,102 @@
 	      ]
 	    }
 	  },
-	  ".book-list": {
+	  ".catelog": {
 	    "flexDirection": "column",
 	    "flex": 1
+	  },
+	  ".catelog-item": {
+	    "paddingTop": "30px",
+	    "paddingRight": "30px",
+	    "paddingBottom": "30px",
+	    "paddingLeft": "30px",
+	    "backgroundColor": "#ffffff",
+	    "borderTopWidth": "0px",
+	    "borderRightWidth": "0px",
+	    "borderBottomWidth": "1px",
+	    "borderLeftWidth": "0px",
+	    "borderTopColor": "#dddddd",
+	    "borderRightColor": "#dddddd",
+	    "borderBottomColor": "#dddddd",
+	    "borderLeftColor": "#dddddd"
+	  },
+	  ".catelog-item text": {
+	    "color": "#333333",
+	    "_meta": {
+	      "ruleDef": [
+	        {
+	          "t": "a",
+	          "n": "class",
+	          "i": false,
+	          "a": "element",
+	          "v": "catelog-item"
+	        },
+	        {
+	          "t": "d"
+	        },
+	        {
+	          "t": "t",
+	          "n": "text"
+	        }
+	      ]
+	    }
 	  }
 	}
 
 /***/ },
-/* 12 */
+/* 9 */
 /***/ function(module, exports) {
 
 	module.exports = function(module, exports, $app_require$){'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 	
-	var _system = $app_require$('@app-module/system.fetch');
+	var _system = $app_require$('@app-module/system.router');
 	
 	var _system2 = _interopRequireDefault(_system);
 	
-	var _system3 = $app_require$('@app-module/system.router');
+	var _system3 = $app_require$('@app-module/system.fetch');
 	
 	var _system4 = _interopRequireDefault(_system3);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = {
-	    data: {
-	        list: [],
-	        page: 1,
-	        isRefreshing: false
-	    },
-	    onInit: function onInit() {
-	        this.refresh({ refreshing: true });
-	        this.fetchBooks();
-	    },
-	    refresh: function refresh(evt) {
-	        this.isRefreshing = evt.refreshing;
-	        this.page = 1;
-	        this.fetchBooks();
-	    },
-	    fetchBooks: function fetchBooks() {
-	        var _self = this;
-	        var page = this.page;
-	        _system2.default.fetch({
-	            url: 'http://daren.vipc.me/api/book/list/' + page,
-	            success: function success(res) {
-	                var model = JSON.parse(res.data).model;
-	                if (page > 1) {
-	                    _self.list = _self.list.concat(model.list);
-	                } else {
-	                    _self.list = model.list;
-	                    _self.isRefreshing = false;
-	                }
-	            },
-	            fail: function fail(data, code) {
-	                console.log("handling fail, code=" + code);
-	            }
-	        });
-	    },
-	    loadMore: function loadMore() {
-	        this.page += 1;
-	        this.fetchBooks();
-	    },
-	    goCatelog: function goCatelog(item) {
-	        var info = {
-	            bid: item.bid,
-	            cover: item.cover,
-	            name: item.name,
-	            author: item.author
-	        };
-	        _system4.default.push({
-	            uri: '/Books/Catelog',
-	            params: {
-	                bid: item.bid,
-	                cover: item.cover,
-	                name: item.name,
-	                author: item.author
-	            }
-	        });
-	    }
+	  protected: {
+	    bid: '',
+	    cover: '',
+	    name: '',
+	    author: '',
+	    list: []
+	  },
+	  onInit: function onInit() {
+	    this.$page.setTitleBar({ text: this.name });
+	    this.fetchCateLog();
+	  },
+	  fetchCateLog: function fetchCateLog() {
+	    var bid = this.bid,
+	        _self = this;
+	    _system4.default.fetch({
+	      url: 'http://daren.vipc.me/api/book/catelog/' + bid,
+	      success: function success(res) {
+	        var model = JSON.parse(res.data).model;
+	        _self.list = model.catelog;
+	      },
+	      fail: function fail(data, code) {
+	        console.log("handling fail, code=" + code);
+	      }
+	    });
+	  },
+	  goArticle: function goArticle(item) {
+	    _system2.default.push({
+	      uri: '/Books/Article',
+	      params: { cid: item.cid, bid: this.bid, title: item.title }
+	    });
+	  }
 	};
 	
 	
@@ -467,23 +454,23 @@
 	var accessors = ['public', 'protected', 'private'];
 	
 	if (moduleOwn.data && accessors.some(function (acc) {
-	    return moduleOwn[acc];
+	  return moduleOwn[acc];
 	})) {
-	    throw new Error('页面VM对象中的属性data不可与"' + accessors.join(',') + '"同时存在，请使用private替换data名称');
+	  throw new Error('页面VM对象中的属性data不可与"' + accessors.join(',') + '"同时存在，请使用private替换data名称');
 	} else if (!moduleOwn.data) {
-	    moduleOwn.data = {};
-	    moduleOwn._descriptor = {};
-	    accessors.forEach(function (acc) {
-	        var accType = _typeof(moduleOwn[acc]);
-	        if (accType === 'object') {
-	            moduleOwn.data = Object.assign(moduleOwn.data, moduleOwn[acc]);
-	            for (var name in moduleOwn[acc]) {
-	                moduleOwn._descriptor[name] = { access: acc };
-	            }
-	        } else if (accType === 'function') {
-	            console.warn('页面VM对象中的属性' + acc + '的值不能是函数，请使用对象');
-	        }
-	    });
+	  moduleOwn.data = {};
+	  moduleOwn._descriptor = {};
+	  accessors.forEach(function (acc) {
+	    var accType = _typeof(moduleOwn[acc]);
+	    if (accType === 'object') {
+	      moduleOwn.data = Object.assign(moduleOwn.data, moduleOwn[acc]);
+	      for (var name in moduleOwn[acc]) {
+	        moduleOwn._descriptor[name] = { access: acc };
+	      }
+	    } else if (accType === 'function') {
+	      console.warn('页面VM对象中的属性' + acc + '的值不能是函数，请使用对象');
+	    }
+	  });
 	}}
 
 /***/ }

@@ -48,9 +48,9 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	var $app_template$ = __webpack_require__(10)
-	var $app_style$ = __webpack_require__(11)
-	var $app_script$ = __webpack_require__(18)
+	var $app_template$ = __webpack_require__(16)
+	var $app_style$ = __webpack_require__(17)
+	var $app_script$ = __webpack_require__(24)
 	
 	$app_define$('@app-component/index', [], function($app_require$, $app_exports$, $app_module$){
 	     $app_script$($app_module$, $app_exports$, $app_require$)
@@ -66,43 +66,52 @@
 
 /***/ },
 
-/***/ 10:
+/***/ 16:
 /***/ function(module, exports) {
 
 	module.exports = {
-	  "type": "div",
-	  "attr": {},
-	  "classList": [
-	    "voice"
-	  ],
+	  "type": "refresh",
+	  "attr": {
+	    "refreshing": function () {return this.isRefreshing}
+	  },
+	  "events": {
+	    "refresh": "refresh"
+	  },
 	  "children": [
 	    {
-	      "type": "div",
+	      "type": "list",
 	      "attr": {},
-	      "shown": function () {return this.isLoading},
-	      "classList": [
-	        "loading"
-	      ],
-	      "children": [
-	        {
-	          "type": "text",
-	          "attr": {
-	            "value": "声音读取中..."
-	          }
-	        }
-	      ]
-	    },
-	    {
-	      "type": "div",
-	      "attr": {},
-	      "shown": function () {return !(this.isLoading)},
 	      "classList": [
 	        "voice-list"
 	      ],
+	      "events": {
+	        "scrollbottom": "loadMore"
+	      },
 	      "children": [
 	        {
-	          "type": "div",
-	          "attr": {},
+	          "type": "list-item",
+	          "attr": {
+	            "type": "loading"
+	          },
+	          "shown": function () {return this.isRefreshing},
+	          "classList": [
+	            "loading"
+	          ],
+	          "children": [
+	            {
+	              "type": "text",
+	              "attr": {
+	                "value": "书架读取中..."
+	              }
+	            }
+	          ]
+	        },
+	        {
+	          "type": "list-item",
+	          "attr": {
+	            "type": "voice-item"
+	          },
+	          "shown": function () {return !(this.isRefreshing)},
 	          "repeat": function () {return this.list},
 	          "classList": [
 	            "voice-item"
@@ -186,13 +195,14 @@
 
 /***/ },
 
-/***/ 11:
+/***/ 17:
 /***/ function(module, exports) {
 
 	module.exports = {
 	  ".loading": {
-	    "flex": 1,
-	    "flexDirection": "column",
+	    "height": "300px",
+	    "width": "100%",
+	    "color": "#999999",
 	    "alignItems": "center",
 	    "justifyContent": "center"
 	  },
@@ -458,7 +468,7 @@
 
 /***/ },
 
-/***/ 18:
+/***/ 24:
 /***/ function(module, exports) {
 
 	module.exports = function(module, exports, $app_require$){'use strict';
@@ -478,26 +488,40 @@
 	exports.default = {
 	    data: {
 	        list: [],
-	        isLoading: true
+	        page: 1,
+	        isRefreshing: false
 	    },
 	    onInit: function onInit() {
-	        this.fetchVoice(1);
+	        this.refresh({ refreshing: true });
+	        this.fetchVoice();
 	    },
-	    fetchVoice: function fetchVoice(page) {
+	    refresh: function refresh(evt) {
+	        this.isRefreshing = evt.refreshing;
+	        this.page = 1;
+	        this.fetchVoice();
+	    },
+	    fetchVoice: function fetchVoice() {
 	        var _self = this;
-	        this.isLoading = true;
-	
+	        var page = this.page;
 	        _system2.default.fetch({
 	            url: 'http://daren.vipc.me/api/voice/list/' + page,
 	            success: function success(res) {
 	                var model = JSON.parse(res.data).model;
-	                _self.list = model.list;
-	                _self.isLoading = false;
+	                if (page > 1) {
+	                    _self.list = _self.list.concat(model.list);
+	                } else {
+	                    _self.list = model.list;
+	                    _self.isRefreshing = false;
+	                }
 	            },
 	            fail: function fail(data, code) {
 	                console.log("handling fail, code=" + code);
 	            }
 	        });
+	    },
+	    loadMore: function loadMore() {
+	        this.page += 1;
+	        this.fetchVoice();
 	    }
 	};
 	

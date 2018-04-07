@@ -29,6 +29,12 @@
       "Books": {
         "component": "index"
       },
+      "Books/Catelog": {
+        "component": "index"
+      },
+      "Books/Article": {
+        "component": "index"
+      },
       "Voice": {
         "component": "index"
       }
@@ -38,11 +44,10 @@
     "titleBarBackgroundColor": "#f3f3f3",
     "titleBarTextColor": "#414141",
     "backgroundColor": "#eeeeee",
-    "menu": true,
+    "menu": false,
     "pages": {
       "Index": {
-        "titleBarText": "观止",
-        "menu": false
+        "titleBarText": "观止"
       }
     }
   }

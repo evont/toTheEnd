@@ -1,17 +1,90 @@
 <template>
-    <div class="article">
-        <text>boook</text>
-    </div>
+    <refresh @refresh="refresh" refreshing="{{isRefreshing}}">
+        <list class="book-list" onscrollbottom="loadMore">
+            <list-item if="isRefreshing" class="loading" type="loading">
+                <text>书架读取中...</text>
+            </list-item>
+            <list-item else for="{{ list }}" type="book-item">
+                <div class="book-item">
+                    <image src="{{ $item.cover }}" ></image>
+                    <div class="intro">
+                        <text class="intro-title">{{ $item.name }}</text>
+                        <text class="intro-author">{{ $item.author }}</text>    
+                        <a class="btn" onclick="goCatelog($item)">查看目录</a>
+                    </div>
+                </div>
+            </list-item>
+        </list>
+    </refresh>
 </template>
-
-<style src="../Common/common.css"></style>s
+<style>
+@import '../Common/common.css';
+@import './book.css';
+.book-list {
+    flex-direction: column;
+    flex: 1;
+}
+</style>
 
 <script>
     import fetch from '@system.fetch'
+    import router from '@system.router'
     export default {
         data: {
-            model: {},
-            isLoading: true,
+            list: [],
+            page: 1,
+            isRefreshing: false
+        },
+        onInit () {
+            this.refresh({refreshing: true})
+            this.fetchBooks();
+        },
+        refresh (evt) {
+            this.isRefreshing = evt.refreshing;
+            this.page = 1;
+            this.fetchBooks();
+        },
+        fetchBooks () {
+            let _self = this;
+            let page = this.page;
+            fetch.fetch({
+                url: `http://daren.vipc.me/api/book/list/${page}`,
+                success: function(res){
+                    let model = JSON.parse(res.data).model;
+                    if(page > 1) {
+                        _self.list = _self.list.concat(model.list);
+                    } else {
+                        _self.list = model.list;
+                        _self.isRefreshing = false;
+                    }
+                    
+                },
+                fail: function(data, code) {
+                    console.log("handling fail, code=" + code);
+                }
+            })
+        },
+        loadMore () {
+            // 后续加上是否有更多数据的判断
+            this.page += 1;
+            this.fetchBooks();   
+        },
+        goCatelog (item) {
+            let info = {
+                bid: item.bid,
+                cover: item.cover,
+                name: item.name,
+                author: item.author
+            }
+            router.push({
+                uri: '/Books/Catelog',
+                params: {
+                    bid: item.bid,
+                    cover: item.cover,
+                    name: item.name,
+                    author: item.author
+                }
+             })
         }
     }
 </script>

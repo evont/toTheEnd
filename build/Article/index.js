@@ -68,80 +68,94 @@
 /***/ function(module, exports) {
 
 	module.exports = {
-	  "type": "div",
-	  "attr": {},
-	  "classList": [
-	    "article"
-	  ],
+	  "type": "refresh",
+	  "attr": {
+	    "refreshing": function () {return this.isRefreshing}
+	  },
+	  "events": {
+	    "refresh": "refresh"
+	  },
 	  "children": [
 	    {
-	      "type": "div",
+	      "type": "list",
 	      "attr": {},
-	      "shown": function () {return this.isLoading},
 	      "classList": [
-	        "loading"
+	        "article"
 	      ],
 	      "children": [
 	        {
-	          "type": "text",
+	          "type": "list-item",
 	          "attr": {
-	            "value": "文章读取中..."
-	          }
-	        }
-	      ]
-	    },
-	    {
-	      "type": "refresh",
-	      "attr": {
-	        "refreshing": function () {return this.isRefresh}
-	      },
-	      "shown": function () {return !(this.isLoading)},
-	      "classList": [
-	        "article-content"
-	      ],
-	      "events": {
-	        "refresh": "refresh"
-	      },
-	      "children": [
-	        {
-	          "type": "text",
-	          "attr": {
-	            "value": function () {return this.title}
+	            "type": "article-item"
 	          },
-	          "classList": [
-	            "title"
+	          "children": [
+	            {
+	              "type": "div",
+	              "attr": {},
+	              "shown": function () {return this.isRefreshing},
+	              "classList": [
+	                "loading"
+	              ],
+	              "children": [
+	                {
+	                  "type": "text",
+	                  "attr": {
+	                    "value": "文章读取中..."
+	                  }
+	                }
+	              ]
+	            },
+	            {
+	              "type": "div",
+	              "attr": {},
+	              "shown": function () {return !(this.isRefreshing)},
+	              "classList": [
+	                "article-content"
+	              ],
+	              "children": [
+	                {
+	                  "type": "text",
+	                  "attr": {
+	                    "value": function () {return this.title}
+	                  },
+	                  "classList": [
+	                    "title"
+	                  ]
+	                },
+	                {
+	                  "type": "text",
+	                  "attr": {
+	                    "value": function () {return this.author}
+	                  },
+	                  "classList": [
+	                    "author"
+	                  ]
+	                },
+	                {
+	                  "type": "text",
+	                  "attr": {
+	                    "value": function () {return this.content}
+	                  },
+	                  "classList": [
+	                    "content"
+	                  ]
+	                },
+	                {
+	                  "type": "input",
+	                  "attr": {
+	                    "type": "button",
+	                    "value": "随机一篇"
+	                  },
+	                  "classList": [
+	                    "btn"
+	                  ],
+	                  "events": {
+	                    "click": function (evt) {this.fetchArticle('random',evt)}
+	                  }
+	                }
+	              ]
+	            }
 	          ]
-	        },
-	        {
-	          "type": "text",
-	          "attr": {
-	            "value": function () {return this.author}
-	          },
-	          "classList": [
-	            "author"
-	          ]
-	        },
-	        {
-	          "type": "text",
-	          "attr": {
-	            "value": function () {return this.content}
-	          },
-	          "classList": [
-	            "article"
-	          ]
-	        },
-	        {
-	          "type": "input",
-	          "attr": {
-	            "type": "button",
-	            "value": "随机一篇"
-	          },
-	          "classList": [
-	            "btn"
-	          ],
-	          "events": {
-	            "click": function (evt) {this.fetchArticle('random',evt)}
-	          }
 	        }
 	      ]
 	    }
@@ -154,8 +168,9 @@
 
 	module.exports = {
 	  ".loading": {
-	    "flex": 1,
-	    "flexDirection": "column",
+	    "height": "300px",
+	    "width": "100%",
+	    "color": "#999999",
 	    "alignItems": "center",
 	    "justifyContent": "center"
 	  },
@@ -184,10 +199,10 @@
 	  ".article": {
 	    "backgroundColor": "#ffffff",
 	    "flexDirection": "column",
-	    "flex": 1
+	    "width": "100%"
 	  },
 	  ".article-content": {
-	    "flex": 1,
+	    "width": "100%",
 	    "flexDirection": "column",
 	    "paddingTop": "10px",
 	    "paddingRight": "40px",
@@ -266,7 +281,7 @@
 	      ]
 	    }
 	  },
-	  ".article-content .article": {
+	  ".article-content .content": {
 	    "paddingTop": "0px",
 	    "paddingRight": "0px",
 	    "paddingBottom": "40px",
@@ -290,7 +305,7 @@
 	          "n": "class",
 	          "i": false,
 	          "a": "element",
-	          "v": "article"
+	          "v": "content"
 	        }
 	      ]
 	    }
@@ -325,10 +340,6 @@
 	
 	var _system2 = _interopRequireDefault(_system);
 	
-	var _system3 = $app_require$('@app-module/system.prompt');
-	
-	var _system4 = _interopRequireDefault(_system3);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = {
@@ -337,15 +348,15 @@
 	        title: '读取中',
 	        content: '',
 	        author: '佚名',
-	        isLoading: true,
-	        isRefresh: false,
+	        isRefreshing: false,
 	        isRandom: false
 	    },
 	    onInit: function onInit() {
 	        this.fetchArticle('daily');
+	        this.refresh({ refreshing: true });
 	    },
-	    refresh: function refresh() {
-	        this.isRefresh = true;
+	    refresh: function refresh(evt) {
+	        this.isRefreshing = evt.refreshing;
 	        this.isRandom ? this.fetchArticle('random') : this.fetchArticle('daily');
 	    },
 	    fetchArticle: function fetchArticle(type) {
@@ -359,8 +370,7 @@
 	                _self.title = model.title;
 	                _self.content = model.content;
 	                _self.author = model.author;
-	                _self.isLoading = false;
-	                _self.isRefresh = false;
+	                _self.isRefreshing = false;
 	            },
 	            fail: function fail(data, code) {
 	                console.log("handling fail, code=" + code);
