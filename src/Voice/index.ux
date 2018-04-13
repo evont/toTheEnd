@@ -93,7 +93,7 @@
             let _self = this;
             let page = this.page;
             fetch.fetch({
-                url: `http://daren.vipc.me/api/voice/list/${page}`,
+                url: `/api/voice/list/${page}`,
                 success: function(res){
                     let model = JSON.parse(res.data).model;
                     if(page > 1) {

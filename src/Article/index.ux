@@ -83,7 +83,7 @@
             this.isLoading = true;
             type === 'random' && (this.isRandom = true);
             fetch.fetch({
-                url: `http://daren.vipc.me/api/article/${type}`,
+                url: `/api/article/${type}`,
                 success: function(res){
                     let model = JSON.parse(res.data).model;
                     _self.title = model.title;

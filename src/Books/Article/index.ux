@@ -46,7 +46,7 @@
           cid = this.cid,
           _self = this;
       fetch.fetch({
-          url: `http://daren.vipc.me/api/book/content/${bid}/${cid}`,
+          url: `/api/book/content/${bid}/${cid}`,
           success: function(res){
               let model = JSON.parse(res.data).model;
               _self.content = model.content;
